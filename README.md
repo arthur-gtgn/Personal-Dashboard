@@ -1,4 +1,4 @@
-# Project Title
+# Biking Accidents: Insights from Machine Learning
 
 This github repository contains all the files and code used to create the project "Bike Accidents: Insights from Machine Learning". The project is divided into 3 main parts: Data Preprocessing, Data Analysis and Visualization and finally a Machine Learning model used to predict the evolution of bike accidents over the years in France.
 
