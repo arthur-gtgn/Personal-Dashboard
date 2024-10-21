@@ -39,8 +39,7 @@ def CountDistribution(data):
         subtitleFontSize=12
     ).properties(
         title={
-            "text": "Distribution of accidents by year",
-            "subtitle": "Chart showing the evolution of the number of accidents per year",
+            "text": "Chart showing the evolution of the number of accidents over the years",
         }
     ).interactive()
 

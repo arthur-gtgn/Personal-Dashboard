@@ -13,8 +13,7 @@ def GravDistributionByAgeYear(df, year):
                 alt.expr.if_(alt.datum.grav == 'Blessé léger', 1,
                 alt.expr.if_(alt.datum.grav == 'Blessé hospitalisé', 2, 3)))
     ).properties(
-        title={"text": f"The gravity of accidents by age ({year})",
-                "subtitle": f"Distribution of accidents by age and gravity in {year}"},
+        title={"text": f"Severity of accidents per age in {year} 📊"},
         width=1150, height=400
     ).configure_title(anchor='start', fontSize=16, subtitleFontSize=12
     ).configure_axis(labelFontSize=12, titleFontSize=14)
