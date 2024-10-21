@@ -1,27 +1,20 @@
 import altair as alt
 
 def GravDistributionByAgeYear(df, year):
-    
-    chart = alt.Chart(df).mark_bar().encode(
-        x=alt.X('age:O', title='Victim age'),  # Ordinal scale for years, no x-axis title
-        y=alt.Y('count:Q', title='Number of accidents'),  # Quantitative y-axis with label
-        color=alt.Color('grav:N', title='Category')  # No legend for the color
+    return alt.Chart(df).mark_bar().encode(
+        x=alt.X('age:O', title='Victim age'),
+        y=alt.Y('count:Q', title='Number of accidents'),
+        color=alt.Color('grav:N', title='Category',
+                scale=alt.Scale(domain=['Indemne', 'Blessé léger', 'Blessé hospitalisé', 'Tué'],
+                        range=['#005EFF', '#78C2FF', '#FFA1A2', '#FF2629'])),
+        order=alt.Order('order:Q', sort='descending')
+    ).transform_calculate(
+        order=alt.expr.if_(alt.datum.grav == 'Indemne', 0,
+                alt.expr.if_(alt.datum.grav == 'Blessé léger', 1,
+                alt.expr.if_(alt.datum.grav == 'Blessé hospitalisé', 2, 3)))
     ).properties(
-        title={
-            "text": f"The gravity of accidents by age ({year})",
-            "subtitle": f"Distribution of accidents by age and gravity in {year}",
-        }
-    ).configure_title(
-        anchor='start',  # Aligns the title to the start
-        fontSize=16,  # Sets the title font size
-        subtitleFontSize=12  # Sets the subtitle font size
-    ).configure_axis(
-        labelFontSize=12,
-        titleFontSize=14
-    ).properties(
-        width=1150,  # Set chart width
-        height=400,  # Set chart height
-    )
-
-    # Display the chart
-    return chart
+        title={"text": f"The gravity of accidents by age ({year})",
+                "subtitle": f"Distribution of accidents by age and gravity in {year}"},
+        width=1150, height=400
+    ).configure_title(anchor='start', fontSize=16, subtitleFontSize=12
+    ).configure_axis(labelFontSize=12, titleFontSize=14)

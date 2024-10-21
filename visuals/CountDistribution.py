@@ -23,7 +23,7 @@ def CountDistribution(data):
         height=300
     ).interactive()
 
-    points = alt.Chart(data).mark_point(interpolate='monotone').encode(
+    points = alt.Chart(data).mark_point(filled=True, interpolate='monotone', size=70).encode(
         x=alt.X('an:N'),
         y='count()',
         color=alt.Color('count()', scale=alt.Scale(scheme='redyellowgreen', reverse=True)),
