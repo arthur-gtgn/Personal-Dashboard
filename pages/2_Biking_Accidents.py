@@ -59,7 +59,7 @@ st.sidebar.write(f"""
 </div>
 """, unsafe_allow_html=True)
 
-st.sidebar.image('/images/efrei.png', use_column_width=True)
+st.sidebar.image('./images/efrei.png', use_column_width=True)
 
 st.sidebar.write('© 2024 Arthur Gatignol. All rights reserved.')
 
