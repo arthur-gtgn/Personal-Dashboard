@@ -73,14 +73,12 @@ footer_html = """
 }
 </style>
 <div class="footer">
-    <img src='./images/efrei.png' width=100 style='border-radius: 50%;'>
     <p>© 2024 Arthur Gatignol. All rights reserved.</p>
 </div>
 """
     
-st.markdown(footer_html, unsafe_allow_html=True)
+st.sidebar.markdown(footer_html, unsafe_allow_html=True)
 
-st.sidebar.write('© 2024 Arthur Gatignol. All rights reserved.')
 
 #----------------------------------------- Introduction ---------------------------------------------------
 
