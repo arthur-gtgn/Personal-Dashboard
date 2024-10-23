@@ -16,7 +16,7 @@ from Portfolio import underlined_subheader
 
 # --------------------------------- Data Loading & Function Declaration -------------------------------------
 # Load the GeoJSON data
-with open('/Users/arthurgatignol/Developer/Personal-Dashboard/data/france-departments.geojson', 'r') as f:
+with open('/data/france-departments.geojson', 'r') as f:
     geojson_data = json.load(f)
 
 def change_time(x:str) -> str:
