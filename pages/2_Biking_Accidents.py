@@ -61,6 +61,25 @@ st.sidebar.write(f"""
 
 st.sidebar.image('./images/efrei.png', use_column_width=True)
 
+footer_html = """
+<style>
+.footer {
+    position: fixed;
+    bottom: 0;
+    width: 100%;
+    text-align: center;
+    padding: 10px 0;
+    background-color: #f1f1f1;
+}
+</style>
+<div class="footer">
+    <img src='./images/efrei.png' width=100 style='border-radius: 50%;'>
+    <p>© 2024 Arthur Gatignol. All rights reserved.</p>
+</div>
+"""
+    
+st.markdown(footer_html, unsafe_allow_html=True)
+
 st.sidebar.write('© 2024 Arthur Gatignol. All rights reserved.')
 
 #----------------------------------------- Introduction ---------------------------------------------------
