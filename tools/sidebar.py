@@ -39,3 +39,5 @@ def write_sidebar():
     st.sidebar.write("<h1><u>Languages</u></h1>", unsafe_allow_html=True)
     st.sidebar.write("<p style=font-size:19px>🇫🇷 <b>|</b> French: Native</p>", unsafe_allow_html=True)
     st.sidebar.write("<p style=font-size:19px>🇬🇧 <b>|</b> English: Fluent</p>", unsafe_allow_html=True)
+    st.sidebar.write('<br>', unsafe_allow_html=True)
+    st.sidebar.write('© 2024 Arthur Gatignol. All rights reserved.')
