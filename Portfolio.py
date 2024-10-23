@@ -3,9 +3,8 @@ import pandas as pd
 import folium
 from streamlit_folium import st_folium
 
-from card import write_card
-from sidebar import write_sidebar
-from getRepo import getRepo
+from tools.card import write_card
+from tools.sidebar import write_sidebar
 
 # BUG: Epace non-voulu entre la carte et la partie 'Personal Projects 📁'
 
@@ -16,12 +15,7 @@ def underlined_subheader(text):
 
 write_sidebar()
 
-col1, col2 = st.columns([1, 1])
-with col1:
-    st.image('./images/efrei.png', width=400)
-
-with col2:
-    st.image('./images/BNP.png', width=400)
+st.image('./images/efrei.png', width=400)
 
 st.title('Hi! I am Arthur Gatignol 👋')
 st.write("""
@@ -100,7 +94,7 @@ with col2:
         "🤖 Machine Learning for Diabetes",
         "Exploration of different machine learning models for binary classification of the Pima Indians Diabetes dataset",
         ['Python', 'Scikit-learn', 'Pandas', 'Matplotlib'],
-        "arthur-gtgn/Machine-Learning-for-Diabetes",
+        "arthur-gtgn/Diabetes-dataset-ml",
         "October 2024"
     )
 

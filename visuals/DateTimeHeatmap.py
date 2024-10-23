@@ -30,6 +30,9 @@ def DateTimeHeatmap(data):
         alt.Tooltip('count:Q', title='Number of Accidents')  
     ]
     ).properties(
+        title={
+            "text": "Accidents on the clock ⏱️",
+        },
         width=600,
         height=400
-    )
+    ).interactive()

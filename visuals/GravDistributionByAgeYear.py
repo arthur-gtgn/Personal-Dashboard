@@ -16,4 +16,4 @@ def GravDistributionByAgeYear(df, year):
         title={"text": f"Severity of accidents per age in {year} 📊"},
         width=1150, height=400
     ).configure_title(anchor='start', fontSize=16, subtitleFontSize=12
-    ).configure_axis(labelFontSize=12, titleFontSize=14)
+    ).configure_axis(labelFontSize=12, titleFontSize=14).interactive()

@@ -1,0 +1,5 @@
+data/
+streamlit-dashboard/
+__pycache__/
+visuals/__pycache__/
+.DS_Store/

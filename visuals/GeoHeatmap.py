@@ -72,12 +72,13 @@ def GeoHeatmap(data, geojson_data, selected_year):
             highlight_function=lambda feature: {'weight': 3, 'color': 'black'}
         ).add_to(m)
 
-        st.components.v1.html(m._repr_html_(), width=700, height=500)
+        st.components.v1.html(m._repr_html_(), width=600, height=550)
         
     with col2:
         
         selected_dep = st.selectbox('Select a department code', sorted(data['dep'].unique())) 
         
+        data['grav'] = data['grav'].replace({1: 'Indemne', 2: 'Tué', 3: 'Blessé hospitalisé', 4: 'Blessé léger'})
         department_info = data[data['dep'] == selected_dep]
         
         department_name = ''
@@ -88,16 +89,18 @@ def GeoHeatmap(data, geojson_data, selected_year):
         st.write(f"""
         <p style=font-size:18px>
         <b>Department:</b> {department_name}<br>
-        <b>Total number of accidents:</b> {department_info.shape[0]}<br>
+        <b>Total number of accidents:</b> {department_info.shape[0]}<br><br>
         </p>
         """, unsafe_allow_html=True)
         
         severity_counts = department_info['grav'].value_counts().reset_index()
         severity_counts.columns = ['grav', 'count']
-
+        
         pie_chart = alt.Chart(severity_counts).mark_arc().encode(
             theta=alt.Theta(field="count", type="quantitative"),
-            color=alt.Color(field="grav", type="nominal"),
+            color=alt.Color('grav:N', title='Category',
+                scale=alt.Scale(domain=['Indemne', 'Blessé léger', 'Blessé hospitalisé', 'Tué'],
+                        range=['#005EFF', '#78C2FF', '#FFA1A2', '#FF2629'])),
             tooltip=['grav', 'count']
         ).properties(
             width=300,

@@ -1,4 +1,5 @@
 import streamlit as st
+import altair as alt
 import pandas as pd
 import base64
 import json
@@ -10,7 +11,7 @@ from visuals.GravDistributionByAge import GravDistributionByAge
 from visuals.GravDistributionByAgeYear import GravDistributionByAgeYear
 from visuals.GeoHeatmap import GeoHeatmap
 from visuals.DateTimeHeatmap import DateTimeHeatmap
-from sidebar import write_sidebar
+from tools.sidebar import write_sidebar
 from Portfolio import underlined_subheader
 
 # --------------------------------- Data Loading & Function Declaration -------------------------------------
@@ -77,6 +78,9 @@ data = pd.read_csv("data/AccidentsVeloNum.csv")
 data['age'] = data['age'].apply(lambda x: 2022 - x if x > 2000 else x)
 data['hrmn'] = data['hrmn'].apply(lambda x: change_time(str(x)))
 
+cat_data = pd.read_csv('data/AccidentsVeloCat.csv')
+data['age'] = data['age'].apply(lambda x: 2022 - x if x > 2000 else x)
+data['hrmn'] = data['hrmn'].apply(lambda x: change_time(str(x)))
 
 code = """
 data = pd.read_csv("data/AccidentsVeloNum.csv")
@@ -180,10 +184,144 @@ selected_year = st.selectbox("Select Year", data['an'].unique())
 data_per_year = select_gravity_df(data[data['an'] == selected_year])
 
 # Display the third chart (gravity distribution by age for a specific year)
+st.write(f"""
+<p style=font-size:18px>
+Now that we are able to select partial amounts of the data, corresponding to a specific year, we can start to analyze the
+trends observed through the years simply by selecting the year we want to analyze. In this case, we are looking at the distribution
+of the severity of the accidents based on the victim's age for {selected_year}.</br>
+</p>
 
+<p style=font-size:18px>
+Depending on the year you selected, you can see that the distribution resembles the general trends observed in the previous section.
+However, in 2017 and after, we can see a decrease in the number of accidents and a more homogeneous distribution of the severity of the accidents.
+</p>
+""", unsafe_allow_html=True)
 grav_distribution_year_chart = GravDistributionByAgeYear(df=data_per_year, year=selected_year)
 st.altair_chart(grav_distribution_year_chart, use_container_width=True)
 
+st.write(f"""
+<p style=font-size:18px>
+One of the many advantages of having government distributed data is that it usually comes with
+geographical data such as department codes or coordinates. For the sake of keeping this dashboard
+concise, logical and mainly too avoid breaking it with html content overload, I decided to only
+use the department codes provided for each accident. This still allowed to create a heatmap using
+statistical observations for scale while preserving the dashboard's fluidity.</br>
+</p>
+
+<p style=font-size:18px>
+Now again, this map shows the distribution of bike accidents in each department per year. However,
+I have provided a more detaied vue of the data in each region next to the overall heatmap. This way,
+you can have a more detailed understanding of the distribution of the accidents in each department.
+</p>
+""", unsafe_allow_html=True)
 GeoHeatmap(data, geojson_data, selected_year)
 
-st.altair_chart(DateTimeHeatmap(data), use_container_width=True)
+st.write(f"""
+<p style=font-size:18px>
+Finally, now that we understand the data in each year, in each region, we can also start looking at
+the time data that was provided. I have therefore created a heatmap showing when we have 'booms' in
+the number of biking accidents.</br>
+</p>
+
+<p style=font-size:18px>
+From the visual below, and because the peak of accidents doesn't seem to change much over the years,
+we can conclude that biking accidents are more likely to happen when people are commuting to work or
+when kids come back from school. This is a very interesting insight that could be used to prevent 
+more accidents in the future.
+</p><br>
+""", unsafe_allow_html=True)
+st.altair_chart(DateTimeHeatmap(data[data['an'] == selected_year]), use_container_width=True)
+
+cat_data = cat_data[cat_data['an'] == selected_year]
+cat_data = cat_data.dropna(subset=['trajet'])
+
+col1, col2 = st.columns([1, 0.75])
+
+with col1:
+    pie_chart = alt.Chart(cat_data).mark_arc().encode(
+                theta='count()',
+                color=alt.Color('trajet:N', title='Type de trajet',),
+                tooltip=['trajet', 'count()']
+            ).properties(
+                width=300,
+                height=300
+            ).interactive()
+
+    st.altair_chart(pie_chart, use_container_width=True)
+    
+with col2:
+    st.write(f"""
+<p style=font-size:18px>
+This pie chart allows us to verify our previous hypothesis depending, again on each year. From
+what we can see, it counters our previous hypothesis that was suggesting that the accidents were
+caused during home-work-home trips.</br>
+</p>
+
+<p style=font-size:18px>
+We can probably go further in concluding, from all the previous visuals and insights that were given in
+this dashboard, that the reason for 'fun' trips to be the most common cause of accidents is because 
+victims of these accidents are more likely to be kids or teenagers.
+</p><br>
+""", unsafe_allow_html=True)
+    
+st.divider()
+
+underlined_subheader('Contextual analysis of accidents 🚦')
+st.write(f"""
+<p style=font-size:18px>
+The goal of this section is to provide more visuals about the context of each accident.
+Pie charts are used as they allow to highlight the most influencial variables. In this 
+context, we can observe that most bike accidents happen within town and cities on
+two-ways roads.</br>
+</p>
+""", unsafe_allow_html=True)
+
+col1, col2 = st.columns([1, 1])
+
+with col1:
+    agglo = alt.Chart(cat_data).mark_arc().encode(
+                theta='count()',
+                color=alt.Color('agg:N', title="Cadre de l'accident",),
+                tooltip=['agg', 'count()']
+            ).properties(
+                width=300,
+                height=300
+            ).interactive()
+
+    st.altair_chart(agglo, use_container_width=True)
+with col2:
+    weather = alt.Chart(cat_data).mark_arc().encode(
+                theta='count()',
+                color=alt.Color('atm:N', title="Conditions météo",),
+                tooltip=['atm', 'count()']
+            ).properties(
+                width=300,
+                height=300
+            ).interactive()
+            
+    st.altair_chart(weather, use_container_width=True)
+    
+col1, col2 = st.columns([1, 1])
+with col1:
+    roads = alt.Chart(cat_data).mark_arc().encode(
+                    theta='count()',
+                    color=alt.Color('catr:N', title="Type de route",),
+                    tooltip=['catr', 'count()']
+                ).properties(
+                    width=300,
+                    height=300
+                ).interactive()
+
+    st.altair_chart(roads, use_container_width=True)
+    
+with col2:
+    circulation = alt.Chart(cat_data).mark_arc().encode(
+                        theta='count()',
+                        color=alt.Color('circ:N', title="Sens de circulation",),
+                        tooltip=['circ', 'count()']
+                    ).properties(
+                        width=300,
+                        height=300
+                    ).interactive()
+
+    st.altair_chart(circulation, use_container_width=True)
